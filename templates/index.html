@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Phishing URL Detector</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="shield">🛡️</div>
+
+        <h1>Phishing URL Detector</h1>
+
+        <p class="description">
+            Analyze website URLs and identify suspicious phishing patterns
+            using Machine Learning.
+        </p>
+
+        <form method="POST" id="urlForm">
+
+            <input
+                type="text"
+                name="url"
+                id="urlInput"
+                placeholder="https://example.com"
+                value="{{ url }}"
+                required
+            >
+
+            <button type="submit">
+                Analyze URL
+            </button>
+
+            <button type="button"
+                    class="clear-button"
+                    onclick="clearForm()">
+                Clear
+            </button>
+
+        </form>
+
+        {% if error %}
+        <div class="error">
+            <h3>⚠️ Invalid URL</h3>
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+
+        {% if result == "PHISHING" %}
+        <div class="result phishing">
+            <h2>🚨 Potentially Unsafe Website</h2>
+            <h3>PHISHING DETECTED</h3>
+
+            <p>
+                Our model detected suspicious URL patterns.
+                Avoid entering personal information.
+            </p>
+
+            <p>Model confidence: {{ confidence }}%</p>
+        </div>
+
+        {% elif result == "LEGITIMATE" %}
+        <div class="result legitimate">
+            <h2>🛡️ No Phishing Indicators Detected</h2>
+            <h3>LEGITIMATE</h3>
+
+            <p>
+                Our model did not classify this URL as phishing.
+            </p>
+
+            <p>Model confidence: {{ confidence }}%</p>
+        </div>
+        {% endif %}
+
+        <p class="warning">
+            Important: This tool provides an automated prediction,
+            not a guarantee that a website is safe. Always verify
+            website addresses before sharing personal information.
+        </p>
+
+    </div>
+
+    <script>
+        function clearForm() {
+            document.getElementById("urlInput").value = "";
+
+            const results = document.querySelectorAll(
+                ".result, .error"
+            );
+
+            results.forEach(function(element) {
+                element.remove();
+            });
+        }
+    </script>
+
+</body>
+</html>
